@@ -16,10 +16,14 @@ public class UrlShortenerService {
 
         urlShort.setOriginalUrl(inputUrl);
 
-        // placeholder value
+        // placeholder value for the shortenedUrl
         // TODO: implement actual shortening of the URL
         urlShort.setShortenedUrl("shortenedUrl placeholder");
 
-        return urlShortRepository.save(urlShort).getOriginalUrl();
+        return urlShortRepository.save(urlShort).getShortenedUrl();
+    }
+
+    public String retrieveOriginalUrl(String shortUrl) {
+        return urlShortRepository.findByShortenedUrl(shortUrl).getOriginalUrl();
     }
 }
