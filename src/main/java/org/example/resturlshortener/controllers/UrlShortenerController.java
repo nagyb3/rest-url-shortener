@@ -29,4 +29,9 @@ public class UrlShortenerController {
             return "url not found";
         }
     }
+
+    @GetMapping("health")
+    String getHealth() {
+        return "api is alive! :D ";
+    }
 }
