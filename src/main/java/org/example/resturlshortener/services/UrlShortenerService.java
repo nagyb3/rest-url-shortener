@@ -1,9 +1,14 @@
 package org.example.resturlshortener.services;
 
 import org.example.resturlshortener.entities.UrlShort;
+import org.example.resturlshortener.exceptions.OriginalUrlNotFoundException;
 import org.example.resturlshortener.repositories.UrlShortRepository;
+import org.example.resturlshortener.utils.CalculateShortenedUrl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class UrlShortenerService {
@@ -11,19 +16,23 @@ public class UrlShortenerService {
     @Autowired
     UrlShortRepository urlShortRepository;
 
+    CalculateShortenedUrl calculateShortenedUrl = new CalculateShortenedUrl();
+
     public String shortUrl(String inputUrl) {
         UrlShort urlShort = new UrlShort();
 
         urlShort.setOriginalUrl(inputUrl);
 
-        // placeholder value for the shortenedUrl
-        // TODO: implement actual shortening of the URL
-        urlShort.setShortenedUrl("shortenedUrl placeholder");
-
-        return urlShortRepository.save(urlShort).getShortenedUrl();
+        return calculateShortenedUrl.getShortenedUrl(urlShortRepository.save(urlShort));
     }
 
-    public String retrieveOriginalUrl(String shortUrl) {
-        return urlShortRepository.findByShortenedUrl(shortUrl).getOriginalUrl();
+    public String retrieveOriginalUrl(String id) throws OriginalUrlNotFoundException {
+        Optional<UrlShort> result = urlShortRepository.findById(UUID.fromString(id));
+
+        if (result.isPresent()) {
+            return result.get().getOriginalUrl();
+        } else {
+            throw new OriginalUrlNotFoundException();
+        }
     }
 }

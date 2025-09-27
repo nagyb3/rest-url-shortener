@@ -13,7 +13,4 @@ public class UrlShort {
     private UUID id;
 
     private String originalUrl;
-
-    @Column(unique = true)
-    private String shortenedUrl;
 }
