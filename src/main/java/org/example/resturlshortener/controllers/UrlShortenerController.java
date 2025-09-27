@@ -4,7 +4,10 @@ import org.example.resturlshortener.dto.UrlShortenerPostDto;
 import org.example.resturlshortener.exceptions.OriginalUrlNotFoundException;
 import org.example.resturlshortener.services.UrlShortenerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.net.URI;
 
 @RestController
 @RequestMapping("")
@@ -22,11 +25,12 @@ public class UrlShortenerController {
     }
 
     @GetMapping("/{id}")
-    String retrieveOriginalUrl(@PathVariable String id) {
+    ResponseEntity<String> retrieveOriginalUrl(@PathVariable String id) {
         try {
-            return urlShortenerService.retrieveOriginalUrl(id);
+            String originalUrl = urlShortenerService.retrieveOriginalUrl(id);
+            return ResponseEntity.status(302).header("Location", String.valueOf(URI.create(originalUrl))).build();
         } catch (OriginalUrlNotFoundException e) {
-            return "url not found";
+            return ResponseEntity.status(400).body("url not found");
         }
     }
 
