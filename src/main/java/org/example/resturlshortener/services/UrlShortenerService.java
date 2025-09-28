@@ -5,6 +5,7 @@ import org.example.resturlshortener.exceptions.OriginalUrlNotFoundException;
 import org.example.resturlshortener.repositories.UrlShortRepository;
 import org.example.resturlshortener.utils.CalculateShortenedUrl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -26,6 +27,7 @@ public class UrlShortenerService {
         return calculateShortenedUrl.getShortenedUrl(urlShortRepository.save(urlShort));
     }
 
+    @Cacheable(cacheNames = "originalUrl", key = "#id")
     public String retrieveOriginalUrl(String id) throws OriginalUrlNotFoundException {
         Optional<UrlShort> result = urlShortRepository.findById(UUID.fromString(id));
 
