@@ -33,9 +33,4 @@ public class UrlShortenerController {
             return ResponseEntity.status(400).body("url not found");
         }
     }
-
-    @GetMapping("health")
-    String getHealth() {
-        return "api is alive! :D ";
-    }
 }
